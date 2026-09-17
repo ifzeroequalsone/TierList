@@ -1,0 +1,170 @@
+/* ── Tier List Creator ── */
+.tl-body {
+  display: block;
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.tl-header {
+  background: linear-gradient(180deg, #1b5e20 0%, #2e7d32 100%);
+  color: #fff;
+  padding: 20px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.tl-header h1 { font-size: 1.3rem; font-weight: 700; }
+.tl-header p { font-size: 0.82rem; opacity: 0.8; margin-top: 2px; }
+
+.tl-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+/* ── Toolbar ── */
+.tl-toolbar { display: flex; flex-direction: column; gap: 10px; }
+.tl-query-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.tl-query-row input { min-width: 240px; }
+.tl-hint { font-size: 0.78rem; color: var(--text-muted); }
+.tl-hint code {
+  background: #f0f0f0;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.76rem;
+}
+.tl-toolbar-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+.tl-actions-right { display: flex; gap: 8px; flex-wrap: wrap; }
+.tl-status { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); min-height: 1.2em; }
+.tl-status.success { color: var(--green); }
+.tl-status.warn { color: var(--orange); }
+.tl-status.error { color: var(--red); }
+
+/* ── Board / Tiers ── */
+.tl-board { display: flex; flex-direction: column; gap: 8px; margin: 20px 0; }
+
+.tl-tier {
+  display: flex;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  min-height: 110px;
+}
+
+.tl-tier-label {
+  width: 110px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  background: var(--tier-color, #999);
+  color: #fff;
+}
+.tl-tier-name {
+  width: 100%;
+  text-align: center;
+  background: rgba(255,255,255,0.18);
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.1rem;
+  padding: 4px 2px;
+  outline: none;
+}
+.tl-tier-name::placeholder { color: rgba(255,255,255,0.7); }
+.tl-tier-name:focus { background: rgba(255,255,255,0.3); }
+
+.tl-tier-controls { display: flex; align-items: center; gap: 4px; }
+.tl-tier-controls button {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: #fff;
+  width: 22px; height: 22px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tl-tier-controls button:hover { background: rgba(255,255,255,0.35); }
+.tl-tier-controls button.tl-tier-remove:hover { background: var(--red); }
+.tl-tier-color {
+  width: 22px; height: 22px;
+  border: none;
+  border-radius: 5px;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+}
+
+.tl-tier-body {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 6px;
+  padding: 8px;
+  transition: background 0.12s;
+}
+.tl-tier-body.tl-drop-hover { background: var(--green-light); }
+
+/* ── Pool ── */
+.tl-pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 90px;
+  border-radius: 8px;
+  transition: background 0.12s;
+  padding: 4px;
+}
+.tl-pool.tl-drop-hover { background: var(--green-light); }
+
+/* ── Card thumb ── */
+.tl-card {
+  width: 64px;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: grab;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  transition: transform 0.1s, box-shadow 0.1s, outline 0.1s;
+  flex-shrink: 0;
+  background: #ddd;
+}
+.tl-card img { display: block; width: 100%; height: auto; pointer-events: none; }
+.tl-card:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 2; position: relative; }
+.tl-card.selected { outline: 3px solid var(--blue); outline-offset: 1px; }
+.tl-card.tl-dragging { opacity: 0.4; }
+
+@media (min-width: 700px) {
+  .tl-card { width: 84px; }
+}
+
+.empty-state.tl-empty { padding: 20px; width: 100%; }
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .tl-header { padding: 16px; flex-wrap: wrap; }
+  .tl-main { padding: 16px 12px 40px; }
+  .tl-tier { flex-direction: column; }
+  .tl-tier-label { width: 100%; flex-direction: row; justify-content: space-between; padding: 8px 12px; }
+  .tl-tier-name { width: 70px; }
+  .tl-toolbar-actions { flex-direction: column; align-items: stretch; }
+  .tl-actions-right { justify-content: stretch; }
+  .tl-actions-right .btn { flex: 1; justify-content: center; }
+}

@@ -1,0 +1,86 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --green: #3d8b37;
+  --green-light: #e8f5e9;
+  --orange: #ef6c00;
+  --orange-light: #fff3e0;
+  --blue: #1976d2;
+  --blue-light: #e3f2fd;
+  --red: #d32f2f;
+  --red-light: #ffebee;
+  --bg: #f0f4f0;
+  --surface: #fff;
+  --border: #e0e0e0;
+  --text: #212121;
+  --text-muted: #757575;
+  --radius: 12px;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: 8px;
+  border: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-decoration: none;
+}
+.btn-primary { background: var(--green); color: #fff; }
+.btn-primary:hover { background: #2e7d32; }
+.btn-secondary { background: var(--border); color: var(--text); }
+.btn-secondary:hover { background: #ccc; }
+.btn-danger { background: var(--red); color: #fff; }
+.btn-danger:hover { background: #b71c1c; }
+.btn-sm { padding: 5px 12px; font-size: 0.8rem; border-radius: 6px; }
+
+.search-input {
+  padding: 8px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  outline: none;
+  background: var(--surface);
+}
+.search-input:focus { border-color: var(--green); }
+
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-muted);
+}
+.empty-state .icon { font-size: 3rem; margin-bottom: 12px; }
+.empty-state p { font-size: 0.95rem; }
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #bdbdbd; border-radius: 99px; }

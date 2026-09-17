@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tier List Creator — Scryfall</title>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/tierlist.css">
+  <style>
+    #tl-toast {
+      position: fixed;
+      bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+      background: var(--green);
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 99px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+      z-index: 9999;
+      transition: transform 0.25s cubic-bezier(.34,1.56,.64,1);
+      white-space: nowrap;
+    }
+    #tl-toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body class="tl-body">
+
+<header class="tl-header">
+  <div>
+    <h1>🎴 Tier List Creator</h1>
+    <p>Populate a tier list from any Scryfall search query or link</p>
+  </div>
+</header>
+
+<main class="tl-main">
+
+  <div class="card tl-toolbar">
+    <div class="tl-query-row">
+      <input type="text" id="tl-query" class="search-input" style="width:auto;flex:1"
+             placeholder='Scryfall query or link — e.g. t:dragon c:red, set:mh3, or https://scryfall.com/search?q=...'>
+      <button class="btn btn-primary" id="tl-load-btn">Load Cards</button>
+    </div>
+    <div class="tl-hint">Try: <code>t:dragon</code> · <code>c:red legendary</code> · <code>set:mh3</code> · <code>artist:"rebecca guay"</code> · or paste a scryfall.com search link</div>
+    <div class="tl-toolbar-actions">
+      <span id="tl-status" class="tl-status"></span>
+      <div class="tl-actions-right">
+        <button class="btn btn-secondary btn-sm" id="tl-add-tier-btn">+ Add Tier</button>
+        <button class="btn btn-secondary btn-sm" id="tl-export-btn">📸 Export PNG</button>
+        <button class="btn btn-danger btn-sm" id="tl-reset-btn">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="tl-board" class="tl-board"></div>
+
+  <div class="card">
+    <div class="card-title">Card Pool <span id="tl-pool-count"></span></div>
+    <div id="tl-pool" class="tl-pool" data-drop="pool"></div>
+  </div>
+
+</main>
+
+<div id="tl-toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
