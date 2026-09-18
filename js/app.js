@@ -80,7 +80,27 @@ function slimCard(c) {
   const img = c.image_uris?.small
     ?? c.card_faces?.[0]?.image_uris?.small
     ?? '';
-  return { id: c.id, name: c.name, img };
+  const imgLarge = c.image_uris?.normal
+    ?? c.card_faces?.[0]?.image_uris?.normal
+    ?? img;
+  return { id: c.id, name: c.name, img, imgLarge };
+}
+
+const REQUEST_TIMEOUT_MS = 15000;
+
+async function fetchWithTimeout(url) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  try {
+    return await fetch(url, { signal: controller.signal });
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      throw new Error('Request to Scryfall timed out. Check your connection (or try disabling any ad-blocker/VPN) and try again.');
+    }
+    throw new Error('Could not reach Scryfall. Check your connection (or try disabling any ad-blocker/VPN) and try again.');
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 async function fetchAllCards(query) {
@@ -90,7 +110,7 @@ async function fetchAllCards(query) {
   let page = 0;
 
   while (url && collected.length < MAX_CARDS && page < 8) {
-    const res = await fetch(url);
+    const res = await fetchWithTimeout(url);
     const data = await res.json();
     if (!res.ok) {
       throw new Error(data.details || `Scryfall error (${res.status})`);
@@ -271,6 +291,66 @@ function resetAll() {
   showToast('Tier list reset.');
 }
 
+// ── Hover preview ──────────────────────────────────────
+let previewCardId = null;
+
+function positionPreview(x, y) {
+  const preview = document.getElementById('tl-preview');
+  const margin = 18;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const pw = preview.offsetWidth || 260;
+  const ph = preview.offsetHeight || 360;
+  let left = x + margin;
+  let top = y + margin;
+  if (left + pw > vw) left = x - pw - margin;
+  if (top + ph > vh) top = vh - ph - margin;
+  if (top < margin) top = margin;
+  if (left < margin) left = margin;
+  preview.style.left = `${left}px`;
+  preview.style.top = `${top}px`;
+}
+
+function showPreview(card, x, y) {
+  const id = card.dataset.cardId;
+  const cardData = state.cards.find(c => c.id === id);
+  if (!cardData) return;
+  const preview = document.getElementById('tl-preview');
+  if (previewCardId !== id) {
+    const img = preview.querySelector('img');
+    img.src = cardData.imgLarge || cardData.img;
+    img.alt = cardData.name;
+    previewCardId = id;
+  }
+  preview.classList.add('show');
+  positionPreview(x, y);
+}
+
+function hidePreview() {
+  previewCardId = null;
+  document.getElementById('tl-preview').classList.remove('show');
+}
+
+document.addEventListener('mouseover', e => {
+  const card = e.target.closest('.tl-card');
+  if (!card) return;
+  showPreview(card, e.clientX, e.clientY);
+});
+
+document.addEventListener('mousemove', e => {
+  if (!previewCardId) return;
+  const card = e.target.closest('.tl-card');
+  if (!card || card.dataset.cardId !== previewCardId) { hidePreview(); return; }
+  positionPreview(e.clientX, e.clientY);
+});
+
+document.addEventListener('mouseout', e => {
+  const card = e.target.closest('.tl-card');
+  if (!card) return;
+  if (e.relatedTarget && card.contains(e.relatedTarget)) return;
+  hidePreview();
+});
+
 // ── Drag & drop + click-to-place (event delegation) ───
 function zoneTierId(zone) {
   const val = zone?.dataset.drop;
@@ -281,6 +361,7 @@ function zoneTierId(zone) {
 document.addEventListener('dragstart', e => {
   const card = e.target.closest('.tl-card');
   if (!card) return;
+  hidePreview();
   e.dataTransfer.setData('text/plain', card.dataset.cardId);
   e.dataTransfer.effectAllowed = 'move';
   requestAnimationFrame(() => card.classList.add('tl-dragging'));
